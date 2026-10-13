@@ -1,0 +1,7 @@
+{
+  "name": "@flowcms/next-flow-scan",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "next-flow-scan": "./cli.mjs" },
+  "dependencies": { "ts-morph": "^24.0.0" }
+}
