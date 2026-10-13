@@ -2,7 +2,9 @@
   "name": "flowcms",
   "private": true,
   "packageManager": "pnpm@10.28.0",
-  "engines": { "node": ">=20.9" },
+  "engines": {
+    "node": ">=20.9"
+  },
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
@@ -14,7 +16,8 @@
     "backlog:validate": "node scripts/backlog.mjs validate",
     "backlog:sprints": "node scripts/backlog.mjs render",
     "backlog:move": "node scripts/backlog.mjs move",
-    "check:claude": "node scripts/check-claude.mjs"
+    "check:claude": "node scripts/check-claude.mjs",
+    "github:sync": "node scripts/github-sync.mjs"
   },
   "devDependencies": {
     "turbo": "^2.5.0"
