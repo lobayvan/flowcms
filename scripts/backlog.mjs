@@ -167,7 +167,8 @@ function render(b, quiet = false) {
     let content
     if (fs.existsSync(f)) {
       const cur = fs.readFileSync(f, 'utf8')
-      content = cur.includes(BEGIN) ? cur.replace(new RegExp(`${BEGIN}[\\s\\S]*?${END}`), () => generated) : `${cur}\n${generated}\n`
+      const a = cur.indexOf(BEGIN), z = cur.indexOf(END, a)
+      content = a >= 0 && z > a ? cur.slice(0, a) + generated + cur.slice(z + END.length) : `${cur}\n${generated}\n`
     } else {
       content = `# ${sp.name}\n\n${generated}\n\n## Revue\n\n_À compléter en fin de sprint (/sprint-review)._\n\n## Rétrospective\n\n_À compléter en fin de sprint._\n`
     }

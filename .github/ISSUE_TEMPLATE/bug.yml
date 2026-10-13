@@ -1,0 +1,18 @@
+name: Anomalie
+description: Comportement incorrect
+labels: ["bug"]
+body:
+  - type: textarea
+    id: steps
+    attributes: { label: Étapes pour reproduire, value: "1. \n2. \n3. " }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Attendu / obtenu }
+    validations: { required: true }
+  - type: input
+    id: story
+    attributes: { label: Story concernée, placeholder: "US-0xx" }
+  - type: dropdown
+    id: severity
+    attributes: { label: Gravité, options: ["bloquante", "majeure", "mineure"] }

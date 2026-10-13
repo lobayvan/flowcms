@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  project:
+    name: Backlog et configuration Claude
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node scripts/backlog.mjs validate
+      - run: node scripts/check-claude.mjs
+      - name: Pages de sprint à jour
+        run: |
+          node scripts/backlog.mjs render
+          git diff --exit-code docs/sprints || (echo "::error::Exécuter pnpm backlog:sprints et commiter" && exit 1)
+
+  pr-rules:
+    name: Règles de PR
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Titre Conventional Commits et story référencée
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          echo "$TITLE" | grep -Eq '^(feat|fix|refactor|test|docs|chore|ci|perf)(\([a-z-]+\))?!?: .{3,72}$' \
+            || { echo "::error::Titre attendu : type(scope): résumé"; exit 1; }
+          if ! echo "$LABELS" | grep -q chore; then
+            echo "$BODY" | grep -Eq 'US-[0-9]{3}' || { echo "::error::Le corps doit référencer une story US-xxx"; exit 1; }
+          fi
+
+  code:
+    name: Lint, types, tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_USER: flowcms, POSTGRES_PASSWORD: flowcms, POSTGRES_DB: flowcms_test }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U flowcms" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URI: postgres://flowcms:flowcms@localhost:5432/flowcms_test
+      PAYLOAD_SECRET: ci-secret-not-used-in-production-000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
