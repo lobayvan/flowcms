@@ -61,5 +61,20 @@
     "US-063": "FLOW-45",
     "US-064": "FLOW-46",
     "US-065": "FLOW-47"
+  },
+  "uxDesign": {
+    "status": "done",
+    "doneAt": "2026-10-13",
+    "epic": "FLOW-48",
+    "items": {
+      "personas": "FLOW-49",
+      "journeys": "FLOW-50",
+      "screen-S1": "FLOW-51",
+      "screen-S2": "FLOW-52",
+      "screen-S3": "FLOW-53",
+      "screen-S4": "FLOW-54",
+      "screen-S5": "FLOW-55",
+      "guidelines": "FLOW-56"
+    }
   }
 }
