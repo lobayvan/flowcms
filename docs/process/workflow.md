@@ -59,3 +59,20 @@ branche feat/US-xxx-… ─► commits "Refs: US-xxx" ─► PR ─► CI ─►
 `backlog/backlog.json` reste la source de vérité ; `scripts/github-bootstrap.sh` crée et met à jour
 les issues et milestones à partir de lui. La CI refuse une PR dont le titre n'est pas au format
 Conventional Commits ou dont le corps ne référence aucune story (sauf label `chore`).
+
+## Jira
+
+Le backlog est aussi présent dans Jira : projet **FLOW** sur https://loba-yvan.atlassian.net
+(tableau 34). La correspondance est dans `backlog/jira-map.json`.
+
+| Backlog | Jira |
+|---|---|
+| Epic `E1`…`E8` | Epics `FLOW-1`…`FLOW-8` |
+| Story `US-xxx` | Story `FLOW-n`, label `US-xxx`, parent = epic, *Story point estimate* |
+| Sprint 0…6 | Sprints Jira 34…40 (mêmes dates et objectifs) |
+| `dependsOn` | Liens « bloque / est bloqué par » |
+| Critères d'acceptation | Liste à cocher dans la description |
+
+Une story se retrouve dans Jira par JQL : `project = FLOW AND labels = US-012`. Le statut fait foi
+dans `backlog.json` (`pnpm backlog:move`) ; reporter le changement dans Jira lors du daily, et
+mettre la clé Jira dans le corps de la PR (`Refs: US-012 / FLOW-17`).
